@@ -65,3 +65,4 @@ def counter_img(path):
 
 
 #print(getImagesAndLabels("F:\\DATASCIENCE\\PROJECTS\\MLProjects\FACE\\TrainingImage"))
+
