@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+venv/
+.DS_Store
+.streamlit/credentials.toml
+.streamlit/secrets.toml
+TrainingImage/**
+TrainingImageLabel/Trainner.yml
+Attendance/**
+StudentDetails/StudentDetails.csv
