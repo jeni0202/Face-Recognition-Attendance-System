@@ -1,58 +1,39 @@
-import csv
-import cv2
-import os
-import numpy as np
+def camera_streamlit():
+    import streamlit as st
+    import cv2
+    import numpy as np
+    from PIL import Image
 
-# -------------------------------
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except:
-        return False
+    st.subheader("Camera Check (Streamlit)")
 
+    img = st.camera_input("Capture image to detect face")
 
-# -------------------------------
-# Cloud-safe take image function
-def takeImages(image, Id, name):
-    if not (is_number(Id) and name.isalpha()):
-        return "ID must be numeric and Name must be alphabetic"
+    if img is not None:
+        image = Image.open(img)
+        frame = np.array(image)
 
-    # Convert image to OpenCV format
-    frame = np.array(image)
+        if frame is None or frame.size == 0:
+            st.error("Invalid image")
+            return
 
-    if frame is None or frame.size == 0:
-        return "Invalid image"
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        face_cascade = cv2.CascadeClassifier(
+            "haarcascade_frontalface_default.xml"
+        )
 
-    harcascadePath = "haarcascade_frontalface_default.xml"
-    detector = cv2.CascadeClassifier(harcascadePath)
+        faces = face_cascade.detectMultiScale(
+            gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30)
+        )
 
-    faces = detector.detectMultiScale(gray, 1.3, 5)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(
+                frame, (x, y), (x + w, y + h), (10, 159, 255), 2
+            )
 
-    if len(faces) == 0:
-        return "No face detected. Please try again."
+        st.image(frame, caption="Face Detection Result", channels="BGR")
 
-    os.makedirs("TrainingImage", exist_ok=True)
-    os.makedirs("StudentDetails", exist_ok=True)
-
-    sampleNum = 0
-    for (x, y, w, h) in faces:
-        sampleNum += 1
-        face_img = gray[y:y + h, x:x + w]
-
-        img_path = f"TrainingImage/{name}.{Id}.{sampleNum}.jpg"
-        cv2.imwrite(img_path, face_img)
-
-    # Save student details
-    csv_path = "StudentDetails/StudentDetails.csv"
-    file_exists = os.path.isfile(csv_path)
-
-    with open(csv_path, "a", newline="") as csvFile:
-        writer = csv.writer(csvFile)
-        if not file_exists:
-            writer.writerow(["Id", "Name"])
-        writer.writerow([Id, name])
-
-    return f"Images saved for ID: {Id}, Name: {name}"
+        if len(faces) > 0:
+            st.success(f"Face detected: {len(faces)}")
+        else:
+            st.warning("No face detected")
