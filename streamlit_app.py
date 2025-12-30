@@ -15,16 +15,8 @@ st.title("Face Recognition Attendance System")
 
 # Check Camera
 if st.button("Check Camera"):
-    try:
-        cap = cv2.VideoCapture(0)
-        if cap.isOpened():
-            cap.release()
-            st.success("Camera is working")
-        else:
-            st.error("Camera not accessible")
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
-
+    st.info("Camera check is not available in the deployed web environment. Please run the application locally to test camera functionality.")
+    
 # Capture Faces
 st.subheader("Capture Faces")
 id_input = st.text_input("Enter ID")
