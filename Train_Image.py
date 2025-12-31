@@ -35,15 +35,8 @@ def getImagesAndLabels(path):
 
 # ----------- train images function ---------------
 def TrainImages():
-    try:
-        recognizer = cv2.face.LBPHFaceRecognizer_create()
-    except AttributeError:
-        try:
-            # Fallback for OpenCV 3.x versions
-            recognizer = cv2.face.createLBPHFaceRecognizer()
-        except AttributeError:
-            # Fallback for older OpenCV versions
-            recognizer = cv2.createLBPHFaceRecognizer()
+    #recognizer = cv2.face_LBPHFaceRecognizer.create()
+    recognizer=cv2.face.LBPHFaceRecognizer_create()
     harcascadePath = "haarcascade_frontalface_default.xml"
     detector = cv2.CascadeClassifier(harcascadePath)
     faces, Id = getImagesAndLabels("TrainingImage")
@@ -65,4 +58,3 @@ def counter_img(path):
 
 
 #print(getImagesAndLabels("F:\\DATASCIENCE\\PROJECTS\\MLProjects\FACE\\TrainingImage"))
-
