@@ -92,3 +92,6 @@ def recognize_attendence(image):
         attendance.to_csv(fileName, index=False)
 
     return frame, attendance
+
+
+
